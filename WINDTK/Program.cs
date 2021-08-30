@@ -8,10 +8,7 @@ namespace WINDXN
         [STAThread]
         static void Main()
         {
-            //using (var Application = new Engine()) { Application.Run(); }
-
-            Classes.Scene scene = new Classes.Scene("Blammed");
-            scene.Initialize();
+            
         }
     }
 }
