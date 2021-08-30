@@ -8,7 +8,7 @@
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <ApplicationIcon>Icon.ico</ApplicationIcon>
-    <RootNamespace>WINDXN</RootNamespace>
+    <RootNamespace>WINDTK</RootNamespace>
     <StartupObject>WINDXN.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
