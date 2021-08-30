@@ -1,5 +1,5 @@
 ﻿using System;
-using WINDXN;
+using WINDTK;
 
 namespace WINDTK
 {
@@ -12,7 +12,7 @@ namespace WINDTK
             var data = wxnFile.Read();
             foreach (var item in data)
             {
-                Console.WriteLine(item.Value);
+                Console.WriteLine(item.Value.ToString());
             }
         }
     }
