@@ -24,7 +24,7 @@ namespace WINDXN
         // Utility functions
         public Dictionary<string, dynamic> Read()
         {
-            Dictionary<string, dynamic> ReturnValue = new Dictionary<string, dynamic>();
+            var ReturnValue = new Dictionary<string, dynamic>();
 
             // Reading file
             string[] FileAsText = File.ReadAllText(FilePath).Split("\n");
