@@ -9,7 +9,7 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <ApplicationIcon>Icon.ico</ApplicationIcon>
     <RootNamespace>WINDTK</RootNamespace>
-    <StartupObject>WINDXN.Program</StartupObject>
+    <StartupObject>WINDTK.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Icon.ico" />
