@@ -1,7 +1,7 @@
 ﻿using System;
 using WINDXN;
 
-namespace WINDXN
+namespace WINDTK
 {
     public static class Program
     {
