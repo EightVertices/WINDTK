@@ -29,7 +29,7 @@ namespace WINDXN
             // Reading file
             string[] FileAsText = File.ReadAllText(FilePath).Split("\n");
 
-            string[] WXNData;
+            var WXNData = new Dictionary<string, dynamic>();
 
             for (int i = 0; i < FileAsText.Length; i++)
             {
@@ -102,7 +102,18 @@ namespace WINDXN
                 }
                 else
                 {
-                    WXNData = FileAsText[0].Replace("<", "").Replace(">", "").Split(",");
+                    var data = new string[2];
+                    data[0] = FileAsText[0].Split(':', ' ')[0].Replace('<', ' ').TrimStart();
+                    data[1] = FileAsText[0].Split(':', ' ')[1].Replace('>', ' ').TrimEnd();
+                    if (data[1] == "String")
+                    {
+                        WXNData.Add(data[0], data[1]);
+                    }
+                    else
+                    {
+                        WXNData.Add(data[0], int.Parse(data[1]));
+                    }
+
                 }
             }
 
