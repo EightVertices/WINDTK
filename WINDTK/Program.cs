@@ -9,7 +9,7 @@ namespace WINDTK
         [STAThread]
         static void Main()
         {
-            WXNFile.Write(@"C:\Users\Pichau\source\repos\WINDTK\WINDTK\Write.wxn", 
+            WXNFile.Write(@"", 
                 new List<WXNObject>() { 
                     new WXNObject(AcceptedTypes.String, "Professor DingledongGolden Luxury Statue", "LEGAL"),
                     new WXNObject(AcceptedTypes.Array_Bool, "CRIANÇAS QUE SOFREM BULLING", new bool[] { true, false, true, false }),
@@ -17,8 +17,8 @@ namespace WINDTK
                 },
             new Dictionary<string, dynamic> { { "Version", 1 } });
 
-            var wxnFile = WXNFile.Read(@"C:\Users\Pichau\source\repos\WINDTK\WINDTK\testFile.wxn");
-            var wxnFile2 = WXNFile.Read(@"C:\Users\Pichau\source\repos\WINDTK\WINDTK\Write.wxn");
+            var wxnFile = WXNFile.Read(@"");
+            var wxnFile2 = WXNFile.Read(@"");
 
             foreach (var item in wxnFile.objects)
             {
