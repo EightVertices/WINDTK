@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using WINDTK.Types;
 
 namespace WINDTK
 {
@@ -9,65 +10,41 @@ namespace WINDTK
         Int, String, Bool, Array_Int, Array_String, Array_Bool
     }
 
-    struct WXNObject
-    {
-        public string identifier;
-        public AcceptedTypes type;
-        public bool isArray;
-        public dynamic data;
-
-        public WXNObject(AcceptedTypes type, string identifier, dynamic data)
-        {
-            this.data = data;
-            this.type = type;
-            this.identifier = identifier;
-            isArray = type == AcceptedTypes.Array_Bool || type == AcceptedTypes.Array_String || type == AcceptedTypes.Array_Int ? true : false;
-        }
-    }
-
     class WXNFile
     {
-        private bool IsPureObject(ref string text)
+        static bool IsPureObject(string text)
         {
-            string formatedText = text.Replace(" ", "");
-            return formatedText[0] == '<' && formatedText[^2] == '>';
+            string formatedText = text.Trim();
+            return formatedText[0] == '<' && formatedText[^1] == '>';
         }
 
-        private string[] GetDataInObject(string dataToGet)
-        {
-            return dataToGet[1..^2].Split(':');
-        }
-
-        private WXNObject DescontructObject(ref string textInFile)
+        static WXNObject DescontructObject(ref string textInFile)
         {
             string[] FileInfoDivision = textInFile.Split(":");
             return new WXNObject(Enum.Parse<AcceptedTypes>(FileInfoDivision[0].Split("<")[1].Replace(">", "")), FileInfoDivision[0].Split("<")[0], FileInfoDivision[1]);
         }
 
-        // WXNFile properties
-        string FilePath = "";
-
-        public WXNFile(string filePath)
-        {
-            FilePath = filePath;
-        }
-
         // Utility functions
-        public List<WXNObject> Read()
+        public static WXNFileContent Read(string FilePath)
         {
             // Reading file
-            string[] FileAsText = File.ReadAllText(FilePath).Split("\n");
+            string[] FileAsText;
+            try
+            { FileAsText = File.ReadAllLines(FilePath); }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                throw new FileNotFoundException();
+            }
             var ReturnValue = new List<WXNObject>();
             var WXNData = new Dictionary<string, dynamic>();
 
             for (int i = 0; i < FileAsText.Length; i++)
             {
-                if (!IsPureObject(ref FileAsText[i]))
+                if (!IsPureObject(FileAsText[i]))
                 {
-                    // File info
                     WXNObject @object = DescontructObject(ref FileAsText[i]);
 
-                    // Reading value
                     if (!@object.isArray)
                     {
                         switch (@object.type)
@@ -118,7 +95,8 @@ namespace WINDTK
                 }
                 else
                 {
-                    var data = GetDataInObject(FileAsText[i]);
+                    string[] data = FileAsText[i][1..^1].Split(':');
+
                     dynamic parsedData;
                     if (int.TryParse(data[1], out int dataIntParsed))
                         parsedData = dataIntParsed;
@@ -133,16 +111,10 @@ namespace WINDTK
                         WXNData[data[0]] = parsedData;
                 }
             }
-
-            foreach (var item in WXNData)
-            {
-                Console.WriteLine(item);
-            }
-            // Return
-            return ReturnValue;
+            return new WXNFileContent(ReturnValue, WXNData);
         }
 
-        public void Write(string path, List<WXNObject> objects, Dictionary<string, dynamic> pureObjects)
+        public static void Write(string path, List<WXNObject> objects, Dictionary<string, dynamic> pureObjects)
         {
             string text = "";
             foreach (var item in pureObjects)
@@ -159,11 +131,18 @@ namespace WINDTK
                 {
                     text += $"{item.identifier}<{item.type}>: ";
                     text += "[";
-                    for (int i = 0; i < item.data.Length - 1; i++)
+                    if (item.type == AcceptedTypes.Array_String)
                     {
-                        text += $"{item.data[i]}, ";
+                        for (int i = 0; i < item.data.Length - 1; i++)
+                            text += $"\"{item.data[i]}\", ";
+                        text += $"\"{item.data[item.data.Length - 1]}\"]\n";
                     }
-                    text += $"{item.data[item.data.Length - 1]}]\n";
+                    else
+                    {
+                        for (int i = 0; i < item.data.Length - 1; i++)
+                            text += $"{item.data[i]}, ";
+                        text += $"{item.data[item.data.Length - 1]}]\n";
+                    }
                 }
             }
             File.WriteAllText(path, text);

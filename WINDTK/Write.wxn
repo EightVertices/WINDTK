@@ -1,0 +1,5 @@
+<Type: Cavalo: {}>
+<Version:1>
+Ages<Array_Int>: [14, 38, 39]
+IsMachoMan<Bool>: True
+Names<Array_String>: ["Roger", "Lucas"]

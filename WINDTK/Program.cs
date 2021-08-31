@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using WINDTK;
 
 namespace WINDTK
 {
@@ -9,15 +7,38 @@ namespace WINDTK
         [STAThread]
         static void Main()
         {
-            var wxnFile = new WXNFile("testFile.wxn");
-            var data = wxnFile.Read();
-            foreach (var item in data)
+            /*WXNFile.Write(@"", 
+                new List<WXNObject>() { 
+                    new WXNObject(AcceptedTypes.Array_Int, "Ages", new int[] { 14, 38, 39 }), 
+                    new WXNObject(AcceptedTypes.Bool, "IsMachoMan", true),
+                    new WXNObject(AcceptedTypes.Array_String, "Names", new string[] { "Roger", "Lucas" })
+                },
+            new Dictionary<string, dynamic> { { "Version", 1 } });*/
+
+            var wxnFile = WXNFile.Read(@"");
+            var wxnFile2 = WXNFile.Read(@"");
+
+            foreach (var item in wxnFile.objects)
             {
-                Console.WriteLine(item.data);
+                Console.WriteLine($"{item.identifier} : {item.data}");
             }
-            wxnFile.Write(@"testWrite.wxn", 
-                new List<WXNObject>() { new WXNObject(AcceptedTypes.Array_Int, "Ages", new int[] { 14, 38, 39 }), new WXNObject(AcceptedTypes.Bool, "IsMachoMan", true) },
-                new Dictionary<string, dynamic> { { "Version", 1 } });
+            Console.Write("\n");
+            foreach (var item in wxnFile.pureObjects)
+            {
+                Console.WriteLine($"{item.Key} : {item.Value}");
+            }
+            Console.Write("\n\n");
+
+            foreach (var item in wxnFile2.objects)
+            {
+                Console.WriteLine($"{item.identifier} : {item.data}");
+            }
+            Console.Write("\n");
+            foreach (var item in wxnFile2.pureObjects)
+            {
+                Console.WriteLine($"{item.Key} : {item.Value}");
+            }
+
         }
     }
 }

@@ -1,11 +1,9 @@
-<Version:1 >
+<Version:1>
 <IsMacho: false>
-<IsMacho: TRUE>
+<IsMacho: true>
 <Name: "Renan">
-<MotherName: "Priscila">
-<SecondName: "Penha Marquette">
 SceneObjects<Array_String>: ["Blammed", "Professor Dingledong"]
 SceneObject10<String>: "The only thing you'll ever need"
 RandomNumberIDK<Int>:42069
-RandomNumberIDKasAnArrayBecauseWhyNot<Array_Int>: [1, 2, 3, 4, 5, 6, 7]
+RandomNumberArray<Array_Int>: [1, 2, 3, 4, 5, 6, 7]
 speed<Int>: 2323
