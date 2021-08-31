@@ -1,0 +1,8 @@
+<Version: 1>
+<SceneName: RND>
+<SceneMaxObjsCount: 30>
+
+
+PlayerLife<Int>: 100
+PlayerShield<Int>: 300
+PlayerArmor<Int>: 500

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using WINDTK.Types;
 
 namespace WINDTK
 {
@@ -23,14 +22,14 @@ namespace WINDTK
             return formatedText[0] == '<' && formatedText[^1] == '>';
         }
 
-        WXNObject DeconstructObject(ref string textInFile)
+        WXNObject DeconstructObject(string textInFile)
         {
             string[] FileInfoDivision = textInFile.Split(":");
 
             return new WXNObject(Enum.Parse<WXNTypes>(FileInfoDivision[0].Split("<")[1].Replace(">", "")), FileInfoDivision[0].Split("<")[0], FileInfoDivision[1]);
         }
 
-        private WXNPureObject DeconstructPureObject(ref string textInFile)
+        private WXNPureObject DeconstructPureObject(string textInFile)
         {
             string[] data = textInFile[1..^1].Trim().Split(':');
             dynamic parsedData;
@@ -39,7 +38,7 @@ namespace WINDTK
             else if (bool.TryParse(data[1], out bool dataBoolParsed)) { parsedData = dataBoolParsed; }
             else { parsedData = data[1].Replace('"', ' ').Trim(); }
 
-            return new WXNPureObject(data[0], data[1]);
+            return new WXNPureObject(data[0], data[1].Trim());
         }
 
         // Utility functions
@@ -51,22 +50,27 @@ namespace WINDTK
             var ReturnPureValue = new List<WXNPureObject>();
 
             // Reading file
-            string[] FileAsText;
-
-            try { FileAsText = File.ReadAllLines(FilePath); }
+            var FileAsText = new List<string>();
+            try
+            {
+                string[] fileAsText = File.ReadAllText(FilePath).Split('\n', '\t');
+                for (int i = 0; i < fileAsText.Length; i++)
+                {
+                    if (fileAsText[i] != "") { FileAsText.Add(fileAsText[i]); } 
+                }
+            }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
-
                 throw new FileNotFoundException();
             }
 
-            for (int i = 0; i < FileAsText.Length; i++)
+            for (int i = 0; i < FileAsText.Count; i++)
             {
                 // Reading normal objects
                 if (!IsPureObject(FileAsText[i]))
                 {
-                    WXNObject @object = DeconstructObject(ref FileAsText[i]);
+                    WXNObject @object = DeconstructObject(FileAsText[i]);
 
                     if (!@object.isArray)
                     {
@@ -121,7 +125,7 @@ namespace WINDTK
                 else
                 {
                     // Reading pure objects
-                    WXNPureObject _object = DeconstructPureObject(ref FileAsText[i]);
+                    WXNPureObject _object = DeconstructPureObject(FileAsText[i]);
 
                     ReturnPureValue.Add(_object);
                 }
@@ -139,36 +143,28 @@ namespace WINDTK
 
         public void Write(WXNObject _object)
         {
-            bool alreadyHasItem = false;
-
-            foreach (var item in writeMemory)
+            for (int i = 0; i < writeMemory.Count; i++)
             {
-                if (item.identifier == _object.identifier)
+                if (_object.identifier == writeMemory[i].identifier)
                 {
-                    alreadyHasItem = true;
-                    _object.data = item.data;
-                    _object.type = item.type;
-                    _object.isArray = item.isArray;
+                    writeMemory[i] = _object;
+                    return;
                 }
             }
-
-            if (!alreadyHasItem) { writeMemory.Add(_object); }
+            writeMemory.Add(_object);
         }
 
         public void WritePure(WXNPureObject _object)
         {
-            bool alreadyHasItem = false;
-
-            foreach (var item in writeMemory)
+            for (int i = 0; i < pureWriteMemory.Count; i++)
             {
-                if (item.identifier == _object.identifier)
+                if (_object.identifier == pureWriteMemory[i].identifier)
                 {
-                    alreadyHasItem = true;
-                    _object.data = item.data;
+                    pureWriteMemory[i] = _object;
+                    return;
                 }
             }
-
-            if (!alreadyHasItem) { pureWriteMemory.Add(_object); }
+            pureWriteMemory.Add(_object);
         }
 
         public void Save(string filePath)

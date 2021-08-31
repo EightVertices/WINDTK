@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace WINDTK.Types
+namespace WINDTK
 {
     struct WXNObject
     {
@@ -14,7 +14,7 @@ namespace WINDTK.Types
             this.data = data;
             this.type = type;
             this.identifier = identifier;
-            isArray = type == WXNTypes.Array_Bool || type == WXNTypes.Array_String || type == WXNTypes.Array_Int ? true : false;
+            isArray = type == WXNTypes.Array_Bool || type == WXNTypes.Array_String || type == WXNTypes.Array_Int;
         }
     }
 
@@ -45,17 +45,9 @@ namespace WINDTK.Types
         {
             string returnValue = "";
 
-            foreach (var item in pureObjects)
-            {
-                returnValue += "Id: " + item.identifier + " / $: " + item.data;
-                returnValue += "\n";
-            }
+            foreach (var item in pureObjects) { returnValue += $"id: {item.identifier} / Value: {item.data}\n"; }
 
-            foreach (var item in objects)
-            {
-                returnValue += "Id: " + item.identifier + " / $: " + item.data;
-                returnValue += "\n";
-            }
+            foreach (var item in objects) { returnValue += $"id: {item.identifier} / Value: {item.type} / Value: {item.data}\n"; }
 
             return returnValue;
         }
