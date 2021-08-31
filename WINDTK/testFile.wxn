@@ -7,4 +7,4 @@
 SceneObjects<Array_String>: ["Blammed", "Professor Dingledong"]
 SceneObject10<String>: "The only thing you'll ever need"
 RandomNumberArray<Array_Int>: [1, 2, 3, 4, 5, 6, 7]
-speed<Int>: 2323speed<Int>: 2323
+speed<Int>: 2323

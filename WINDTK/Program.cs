@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using WINDTK.Types;
 
 namespace WINDTK
 {
@@ -7,16 +9,16 @@ namespace WINDTK
         [STAThread]
         static void Main()
         {
-            /*WXNFile.Write(@"", 
+            WXNFile.Write(@"C:\Users\Pichau\source\repos\WINDTK\WINDTK\Write.wxn", 
                 new List<WXNObject>() { 
-                    new WXNObject(AcceptedTypes.Array_Int, "Ages", new int[] { 14, 38, 39 }), 
-                    new WXNObject(AcceptedTypes.Bool, "IsMachoMan", true),
-                    new WXNObject(AcceptedTypes.Array_String, "Names", new string[] { "Roger", "Lucas" })
+                    new WXNObject(AcceptedTypes.String, "Professor DingledongGolden Luxury Statue", "LEGAL"),
+                    new WXNObject(AcceptedTypes.Array_Bool, "CRIANÇAS QUE SOFREM BULLING", new bool[] { true, false, true, false }),
+                    new WXNObject(AcceptedTypes.Int, "IntNum", 1),
                 },
-            new Dictionary<string, dynamic> { { "Version", 1 } });*/
+            new Dictionary<string, dynamic> { { "Version", 1 } });
 
-            var wxnFile = WXNFile.Read(@"");
-            var wxnFile2 = WXNFile.Read(@"");
+            var wxnFile = WXNFile.Read(@"C:\Users\Pichau\source\repos\WINDTK\WINDTK\testFile.wxn");
+            var wxnFile2 = WXNFile.Read(@"C:\Users\Pichau\source\repos\WINDTK\WINDTK\Write.wxn");
 
             foreach (var item in wxnFile.objects)
             {

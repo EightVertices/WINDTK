@@ -129,8 +129,7 @@ namespace WINDTK
                 }
                 else
                 {
-                    text += $"{item.identifier}<{item.type}>: ";
-                    text += "[";
+                    text += $"{item.identifier}<{item.type}>: [";
                     if (item.type == AcceptedTypes.Array_String)
                     {
                         for (int i = 0; i < item.data.Length - 1; i++)
