@@ -1,5 +1,10 @@
 <Version:1>
-SceneObjects<String>:["Blammed", "Professor Dingledong"]
-SceneObject (Just One)<String>:"The only thing you'll ever need"
-RandomNumberIDK<Int>:42069
-RandomNumberIDKasAnArrayBecauseWhyNot<Int>:[1, 2, 3, 4, 5, 6, 7]
+<IsMacho: false>
+<IsMacho: true>
+<Name: "Renan">
+<OtherName: "Araújo">
+<SecondName: "Penha Marquette">
+SceneObjects<Array_String>: ["Blammed", "Professor Dingledong"]
+SceneObject10<String>: "The only thing you'll ever need"
+RandomNumberArray<Array_Int>: [1, 2, 3, 4, 5, 6, 7]
+speed<Int>: 2323
