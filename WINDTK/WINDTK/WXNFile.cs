@@ -5,57 +5,80 @@ using WINDTK.Types;
 
 namespace WINDTK
 {
-    enum AcceptedTypes
+    enum WXNTypes
     {
         Int, String, Bool, Array_Int, Array_String, Array_Bool
     }
 
     class WXNFile
     {
-        static bool IsPureObject(string text)
+        private List<WXNPureObject> pureWriteMemory = new List<WXNPureObject>();
+        private List<WXNObject> writeMemory = new List<WXNObject>();
+
+        // Initializing
+        bool IsPureObject(string text)
         {
             string formatedText = text.Trim();
+
             return formatedText[0] == '<' && formatedText[^1] == '>';
         }
 
-        static WXNObject DescontructObject(ref string textInFile)
+        WXNObject DeconstructObject(ref string textInFile)
         {
             string[] FileInfoDivision = textInFile.Split(":");
-            return new WXNObject(Enum.Parse<AcceptedTypes>(FileInfoDivision[0].Split("<")[1].Replace(">", "")), FileInfoDivision[0].Split("<")[0], FileInfoDivision[1]);
+
+            return new WXNObject(Enum.Parse<WXNTypes>(FileInfoDivision[0].Split("<")[1].Replace(">", "")), FileInfoDivision[0].Split("<")[0], FileInfoDivision[1]);
+        }
+
+        private WXNPureObject DeconstructPureObject(ref string textInFile)
+        {
+            string[] data = textInFile[1..^1].Trim().Split(':');
+            dynamic parsedData;
+
+            if (int.TryParse(data[1], out int dataIntParsed)) { parsedData = dataIntParsed; }
+            else if (bool.TryParse(data[1], out bool dataBoolParsed)) { parsedData = dataBoolParsed; }
+            else { parsedData = data[1].Replace('"', ' ').Trim(); }
+
+            return new WXNPureObject(data[0], data[1]);
         }
 
         // Utility functions
-        public static WXNFileContent Read(string FilePath)
+
+        // Reading
+        public WXNFileContent Read(string FilePath)
         {
+            var ReturnValue = new List<WXNObject>();
+            var ReturnPureValue = new List<WXNPureObject>();
+
             // Reading file
             string[] FileAsText;
-            try
-            { FileAsText = File.ReadAllLines(FilePath); }
+
+            try { FileAsText = File.ReadAllLines(FilePath); }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
+
                 throw new FileNotFoundException();
             }
-            var ReturnValue = new List<WXNObject>();
-            var WXNData = new Dictionary<string, dynamic>();
 
             for (int i = 0; i < FileAsText.Length; i++)
             {
+                // Reading normal objects
                 if (!IsPureObject(FileAsText[i]))
                 {
-                    WXNObject @object = DescontructObject(ref FileAsText[i]);
+                    WXNObject @object = DeconstructObject(ref FileAsText[i]);
 
                     if (!@object.isArray)
                     {
                         switch (@object.type)
                         {
-                            case AcceptedTypes.Int:
+                            case WXNTypes.Int:
                                 @object.data = int.Parse(@object.data);
                                 break;
-                            case AcceptedTypes.String:
+                            case WXNTypes.String:
                                 @object.data = @object.data.Replace('"', ' ').Trim();
                                 break;
-                            case AcceptedTypes.Bool:
+                            case WXNTypes.Bool:
                                 @object.data = bool.Parse(@object.data);
                                 break;
                         }
@@ -64,30 +87,32 @@ namespace WINDTK
                     else
                     {
                         string[] RawValueArray = @object.data.Replace("[", "").Replace("]", "").Split(",");
+
                         switch (@object.type)
                         {
-                            case AcceptedTypes.Array_Int:
+                            case WXNTypes.Array_Int:
                                 int[] Value = new int[RawValueArray.Length];
-                                for (int a = 0; a < RawValueArray.Length; a++)
-                                    Value[a] = int.Parse(RawValueArray[a]);
+
+                                for (int a = 0; a < RawValueArray.Length; a++) { Value[a] = int.Parse(RawValueArray[a]); }
+
                                 // Applying value
                                 @object.data = Value;
+
                                 break;
-                            case AcceptedTypes.Array_String:
-                                for (int a = 0; a < RawValueArray.Length; a++)
-                                {
-                                    RawValueArray[a] = RawValueArray[a].Replace('"', ' ').Trim();
-                                }
+                            case WXNTypes.Array_String:
+                                for (int b = 0; b < RawValueArray.Length; b++) { RawValueArray[b] = RawValueArray[b].Replace('"', ' ').Trim(); }
+
                                 // Applying value
                                 @object.data = RawValueArray;
+
                                 break;
-                            case AcceptedTypes.Array_Bool:
+                            case WXNTypes.Array_Bool:
                                 bool[] value = new bool[RawValueArray.Length];
-                                for(int ii = 0; ii < RawValueArray.Length; ii++)
-                                {
-                                    value[ii] = bool.Parse(RawValueArray[ii]);
-                                }
+
+                                for(int c = 0; c < RawValueArray.Length; c++) { value[c] = bool.Parse(RawValueArray[c]); }
+
                                 @object.data = value;
+
                                 break;
                         }
                         ReturnValue.Add(@object);
@@ -95,56 +120,92 @@ namespace WINDTK
                 }
                 else
                 {
-                    string[] data = FileAsText[i][1..^1].Split(':');
+                    // Reading pure objects
+                    WXNPureObject _object = DeconstructPureObject(ref FileAsText[i]);
 
-                    dynamic parsedData;
-                    if (int.TryParse(data[1], out int dataIntParsed))
-                        parsedData = dataIntParsed;
-                    else if (bool.TryParse(data[1], out bool dataBoolParsed))
-                        parsedData = dataBoolParsed;
-                    else
-                        parsedData = data[1].Replace('"', ' ').Trim();
-
-                    if (!WXNData.ContainsKey(data[0]))
-                        WXNData.Add(data[0], parsedData);
-                    else
-                        WXNData[data[0]] = parsedData;
+                    ReturnPureValue.Add(_object);
                 }
             }
-            return new WXNFileContent(ReturnValue, WXNData);
+
+            return new WXNFileContent(ReturnValue, ReturnPureValue);
         }
 
-        public static void Write(string path, List<WXNObject> objects, Dictionary<string, dynamic> pureObjects)
+        // Writing
+        public void ClearWriteMemory()
+        {
+            writeMemory.Clear();
+            pureWriteMemory.Clear();
+        }
+
+        public void Write(WXNObject _object)
+        {
+            bool alreadyHasItem = false;
+
+            foreach (var item in writeMemory)
+            {
+                if (item.identifier == _object.identifier)
+                {
+                    alreadyHasItem = true;
+                    _object.data = item.data;
+                    _object.type = item.type;
+                    _object.isArray = item.isArray;
+                }
+            }
+
+            if (!alreadyHasItem) { writeMemory.Add(_object); }
+        }
+
+        public void WritePure(WXNPureObject _object)
+        {
+            bool alreadyHasItem = false;
+
+            foreach (var item in writeMemory)
+            {
+                if (item.identifier == _object.identifier)
+                {
+                    alreadyHasItem = true;
+                    _object.data = item.data;
+                }
+            }
+
+            if (!alreadyHasItem) { pureWriteMemory.Add(_object); }
+        }
+
+        public void Save(string filePath)
         {
             string text = "";
-            foreach (var item in pureObjects)
+
+            // Writing pure objects
+            foreach (var item in pureWriteMemory)
             {
-                text += $"<{item.Key}:{item.Value}>\n";
+                text += $"<{item.identifier}:{item.data}>\n";
             }
-            foreach (var item in objects)
+
+            // Writing regular objects
+            foreach (var item in writeMemory)
             {
-                if (!item.isArray)
-                {
-                    text += $"{item.identifier}<{item.type}>: {item.data}\n";
-                }
+                if (!item.isArray) { text += $"{item.identifier}<{item.type}>: {item.data}\n"; }
                 else
                 {
                     text += $"{item.identifier}<{item.type}>: [";
-                    if (item.type == AcceptedTypes.Array_String)
+
+                    if (item.type == WXNTypes.Array_String)
                     {
-                        for (int i = 0; i < item.data.Length - 1; i++)
-                            text += $"\"{item.data[i]}\", ";
+                        for (int i = 0; i < item.data.Length - 1; i++) { text += $"\"{item.data[i]}\", "; }
+
                         text += $"\"{item.data[item.data.Length - 1]}\"]\n";
                     }
                     else
                     {
-                        for (int i = 0; i < item.data.Length - 1; i++)
-                            text += $"{item.data[i]}, ";
+                        for (int i = 0; i < item.data.Length - 1; i++) { text += $"{item.data[i]}, "; }
+
                         text += $"{item.data[item.data.Length - 1]}]\n";
                     }
                 }
             }
-            File.WriteAllText(path, text);
+
+            // Saving
+            File.WriteAllText(filePath, text);
         }
     }
 }

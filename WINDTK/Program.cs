@@ -9,38 +9,25 @@ namespace WINDTK
         [STAThread]
         static void Main()
         {
-            WXNFile.Write(@"", 
-                new List<WXNObject>() { 
-                    new WXNObject(AcceptedTypes.String, "Professor DingledongGolden Luxury Statue", "LEGAL"),
-                    new WXNObject(AcceptedTypes.Array_Bool, "CRIANÇAS QUE SOFREM BULLING", new bool[] { true, false, true, false }),
-                    new WXNObject(AcceptedTypes.Int, "IntNum", 1),
-                },
-            new Dictionary<string, dynamic> { { "Version", 1 } });
+            WXNFile file = new WXNFile();
 
-            var wxnFile = WXNFile.Read(@"");
-            var wxnFile2 = WXNFile.Read(@"");
+            file.ClearWriteMemory();
 
-            foreach (var item in wxnFile.objects)
-            {
-                Console.WriteLine($"{item.identifier} : {item.data}");
-            }
-            Console.Write("\n");
-            foreach (var item in wxnFile.pureObjects)
-            {
-                Console.WriteLine($"{item.Key} : {item.Value}");
-            }
-            Console.Write("\n\n");
+            file.WritePure(new WXNPureObject("Version", "69.1"));
+            file.WritePure(new WXNPureObject("Rênân", "V0.0.0.0.0.0.0.0.0.1.2"));
+            file.WritePure(new WXNPureObject("Arajo", "V-1"));
 
-            foreach (var item in wxnFile2.objects)
-            {
-                Console.WriteLine($"{item.identifier} : {item.data}");
-            }
-            Console.Write("\n");
-            foreach (var item in wxnFile2.pureObjects)
-            {
-                Console.WriteLine($"{item.Key} : {item.Value}");
-            }
+            file.Write(new WXNObject(WXNTypes.String, "Professor", "Ramão"));
+            file.Write(new WXNObject(WXNTypes.String, "Professor", "Serjo"));
+            file.Write(new WXNObject(WXNTypes.String, "Professor", "Dego"));
 
+            file.Write(new WXNObject(WXNTypes.Int, "Número Legal KKK", 6598437));
+
+            file.Save("Dingledong.wxn");
+
+            WXNFileContent dingledong = file.Read("Dingledong.wxn");
+
+            Console.WriteLine(dingledong.ToString());
         }
     }
 }
