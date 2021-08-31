@@ -2,8 +2,7 @@
 <IsMacho: false>
 <IsMacho: TRUE>
 <Name: "Renan">
-<MotherName: "Priscila">
-<SecondName: "Penha Marquette">
+<OtherName: "Araújo">
 SceneObjects<Array_String>: ["Blammed", "Professor Dingledong"]
 SceneObject10<String>: "The only thing you'll ever need"
 RandomNumberIDK<Int>:42069
