@@ -26,4 +26,3 @@ __Pure__: the data types are defined by the object value.
 __Impure (Typed)__: the data types are defined by the object type.
 
 ### Accepted types: ``Int, String, Bool, Array_Int, Array_String, Array_Bool``
-```
