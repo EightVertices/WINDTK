@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 
 namespace WINDTK
 {
@@ -8,7 +9,8 @@ namespace WINDTK
         static void Main()
         {
             WXNFile file = new WXNFile();
-            WXNFileContent dingledong = file.Read(@"");
+
+            WXNFileContent dingledong = file.Read(@"C:\Users\Pichau\source\repos\WINDTK\WINDTK\Sample2.wxn");
             Console.WriteLine(dingledong.ToString());
         }
     }
