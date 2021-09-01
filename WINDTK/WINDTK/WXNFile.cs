@@ -14,13 +14,13 @@ namespace WINDTK
         private List<WXNPureObject> pureWriteMemory = new List<WXNPureObject>();
         private List<WXNObject> writeMemory = new List<WXNObject>();
 
-        bool IsPureObject(string text)
+        private bool IsPureObject(string text)
         {
             string formatedText = text.Trim();
             return formatedText[0] == '<' && formatedText[^1] == '>';
         }
 
-        dynamic GetPureObjectData(string text)
+        private dynamic GetPureObjectData(string text)
         {
             if (int.TryParse(text.Trim(), out int dataIntParsed)) 
                 return dataIntParsed;
@@ -30,7 +30,7 @@ namespace WINDTK
                 return text.Replace('"', ' ').Trim();
         }
 
-        WXNObject DeconstructObject(string textInFile)
+        private WXNObject DeconstructObject(string textInFile)
         {
             string[] FileInfoDivision = textInFile.Split(":");
             return new WXNObject(Enum.Parse<WXNTypes>(FileInfoDivision[0].Split("<")[1].Replace(">", "")), FileInfoDivision[0].Split("<")[0], FileInfoDivision[1]);
