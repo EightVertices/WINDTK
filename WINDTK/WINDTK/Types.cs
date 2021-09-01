@@ -2,7 +2,7 @@
 
 namespace WINDTK
 {
-    struct WXNObject
+    public struct WXNObject
     {
         public string identifier;
         public dynamic data;
@@ -18,7 +18,7 @@ namespace WINDTK
         }
     }
 
-    struct WXNPureObject
+    public struct WXNPureObject
     {
         public string identifier;
         public dynamic data;
@@ -30,7 +30,7 @@ namespace WINDTK
         }
     }
 
-    class WXNFileContent
+    public class WXNFileContent
     {
         public List<WXNObject> objects;
         public List<WXNPureObject> pureObjects;

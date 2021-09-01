@@ -4,12 +4,12 @@ using System.IO;
 
 namespace WINDTK
 {
-    enum WXNTypes
+    public enum WXNTypes
     {
-        Int, String, Bool, Array_Int, Array_String, Array_Bool
+        Int, String, Bool, Array_Int, Array_String, Array_Bool, Vector2, Vector3, Array_Vector2, Array_Vector3
     }
 
-    class WXNFile
+    public class WXNFile
     {
         private List<WXNPureObject> pureWriteMemory = new List<WXNPureObject>();
         private List<WXNObject> writeMemory = new List<WXNObject>();
@@ -47,7 +47,7 @@ namespace WINDTK
 
             // Reading file
             string[] FileAsText;
-            try { FileAsText = File.ReadAllText(FilePath).Split(new[] { '\n', '\t' }, StringSplitOptions.RemoveEmptyEntries); }
+            try { FileAsText = File.ReadAllText(FilePath).Split(new[] { '\n', '\t', '\r' }, StringSplitOptions.RemoveEmptyEntries); }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
