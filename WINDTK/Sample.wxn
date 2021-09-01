@@ -1,8 +1,9 @@
 <Version: 1>
 <SceneName: RND>
 <SceneMaxObjsCount: 30>
+<SceneMaxObjs: ["A", "B", 33, Uk]>
 
 
 PlayerLife<Int>: 100
-PlayerShield<Int>: 300
-PlayerArmor<Int>: 500
+PLayerName<String>: "Renan"
+PlayerWeapons<Array_String>: ["Sword", "Bow", "Hammer"]

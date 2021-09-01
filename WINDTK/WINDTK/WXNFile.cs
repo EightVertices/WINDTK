@@ -14,38 +14,58 @@ namespace WINDTK
         private List<WXNPureObject> pureWriteMemory = new List<WXNPureObject>();
         private List<WXNObject> writeMemory = new List<WXNObject>();
 
-        // Initializing
         bool IsPureObject(string text)
         {
             string formatedText = text.Trim();
-
             return formatedText[0] == '<' && formatedText[^1] == '>';
+        }
+
+        dynamic GetPureObjectData(string text)
+        {
+            if (int.TryParse(text.Trim(), out int dataIntParsed)) 
+                return dataIntParsed;
+            else if (bool.TryParse(text.Trim(), out bool dataBoolParsed)) 
+                return dataBoolParsed; 
+            else 
+                return text.Replace('"', ' ').Trim();
         }
 
         WXNObject DeconstructObject(string textInFile)
         {
             string[] FileInfoDivision = textInFile.Split(":");
-
             return new WXNObject(Enum.Parse<WXNTypes>(FileInfoDivision[0].Split("<")[1].Replace(">", "")), FileInfoDivision[0].Split("<")[0], FileInfoDivision[1]);
         }
 
         private WXNPureObject DeconstructPureObject(string textInFile)
         {
             string[] data = textInFile[1..^1].Trim().Split(':');
-            dynamic parsedData;
 
-            if (int.TryParse(data[1], out int dataIntParsed)) { parsedData = dataIntParsed; }
-            else if (bool.TryParse(data[1], out bool dataBoolParsed)) { parsedData = dataBoolParsed; }
-            else { parsedData = data[1].Replace('"', ' ').Trim(); }
+            if (data[1].Trim()[0] == '[' && data[1].Trim()[^1] == ']')
+            {
+                string[] newData = data[1].Replace("[", "").Replace("]", "").Split(",");
+                var dataArray = new dynamic[newData.Length];
 
-            return new WXNPureObject(data[0], data[1].Trim());
+                for (int i = 0; i < newData.Length; i++)
+                {
+                    dataArray[i] = GetPureObjectData(newData[i]);
+                }
+
+                return new WXNPureObject(data[0], dataArray);
+            }
+            else 
+            {
+                dynamic parsedData = GetPureObjectData(data[1]);
+                return new WXNPureObject(data[0], parsedData);
+            }
+
         }
-
-        // Utility functions
 
         // Reading
         public WXNFileContent Read(string FilePath)
         {
+            if (Path.GetExtension(FilePath) != ".wxn")
+                throw new Exception("The file is not a wxn file");
+
             var ReturnValue = new List<WXNObject>();
             var ReturnPureValue = new List<WXNPureObject>();
 
@@ -134,7 +154,6 @@ namespace WINDTK
             return new WXNFileContent(ReturnValue, ReturnPureValue);
         }
 
-        // Writing
         public void ClearWriteMemory()
         {
             writeMemory.Clear();

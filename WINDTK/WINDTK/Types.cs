@@ -5,9 +5,9 @@ namespace WINDTK
     struct WXNObject
     {
         public string identifier;
+        public dynamic data;
         public WXNTypes type;
         public bool isArray;
-        public dynamic data;
 
         public WXNObject(WXNTypes type, string identifier, dynamic data)
         {
@@ -47,7 +47,7 @@ namespace WINDTK
 
             foreach (var item in pureObjects) { returnValue += $"id: {item.identifier} / Value: {item.data}\n"; }
 
-            foreach (var item in objects) { returnValue += $"id: {item.identifier} / Value: {item.type} / Value: {item.data}\n"; }
+            foreach (var item in objects) { returnValue += $"id: {item.identifier} / Type: {item.type} / Value: {item.data}\n"; }
 
             return returnValue;
         }

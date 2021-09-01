@@ -9,6 +9,7 @@ namespace WINDTK
         {
             WXNFile file = new WXNFile();
             WXNFileContent dingledong = file.Read(@"");
+            Console.WriteLine(dingledong.ToString());
         }
     }
 }
