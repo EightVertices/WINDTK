@@ -10,7 +10,7 @@ namespace WINDTK
         {
             WXNFile file = new WXNFile();
 
-            WXNFileContent dingledong = file.Read(@"C:\Users\Pichau\source\repos\WINDTK\WINDTK\Sample2.wxn");
+            WXNFileContent dingledong = file.Read(@"");
             Console.WriteLine(dingledong.ToString());
         }
     }
