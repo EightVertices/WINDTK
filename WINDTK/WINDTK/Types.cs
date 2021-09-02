@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace WINDTK
+namespace WINDTK.WXN
 {
     public struct WXNObject
     {

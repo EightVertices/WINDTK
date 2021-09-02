@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
 
-namespace WINDTK
+namespace WINDTK.WXN
 {
     enum WXNSeparators
     {
@@ -90,7 +90,6 @@ namespace WINDTK
                 return new Vector2(float.Parse(vectorValues[0]), float.Parse(vectorValues[1]));
         }
 
-        // Reading
         public WXNFileContent Read(string FilePath)
         {
             if (Path.GetExtension(FilePath) != ".wxn")
