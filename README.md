@@ -27,7 +27,4 @@ __Pure (Implicit)__: the data types are defined by the object value.
 
 __Impure (Explicit)__: the data types are defined by the object type.
 
-### Native types: _Int, String, Bool, Array_Int, Array_String, Array_Bool, Vector2, Array_Vector2, Vector3, Array_Vector3_
-
-# TODO:
- - Add more native types: _Float, Array_Float, Vector2, Array_Vector2, Vector3, Array_Vector3_
+### Native types: _Int, String, Bool, Array_Int, Array_String, Array_Bool, Vector, Array_Vector2, Array_Vector3_
