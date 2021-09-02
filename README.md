@@ -1,11 +1,13 @@
 # WINDTK
-WIND stuff :/
+A library consisting of utilities like a file parser (WXN) and others.
 
-## What is this ?
-We created it to use it with the _XNA Framework_ (_MonoGame_), The WINDTK was our first "ATTEMPT" to create a file reader/writer, it only reads ``.wxn`` files and converts the data in ``WXNFileContent``.
+# WXN
+## What is .wxn?
+It's a parser similar to XML, but with simpler syntax and better (native) compatibility with C#.
+We created it to use it with the _XNA Framework_ (_MonoGame_). WXN was our first attempt to create a file reader/writer. It reads ``.wxn`` files and converts the data into ``WXNFileContent``.
 
-## How to use this shit ?
-The WINDTK main syntax must be interpreted as two main objects types: __Pure objects__ or  __Impure (Typed) objects__.
+## How do you use it?
+The WXN main syntax must be interpreted as two main objects types: __Pure (Implicit) objects__ or  __Impure (Explicit) objects__.
 Here is a sample: 
 ```XML
  // Pure
@@ -19,10 +21,13 @@ PlayerLife<Int>: 100
 PLayerName<String>: "Renan"
 PlayerWeapons<Array_String>: ["Sword", "Bow", "Hammer"]
 ```
-But.... What's the diference between then ?
+But... What's the diference between then?
 
-__Pure__: the data types are defined by the object value.
+__Pure (Implicit)__: the data types are defined by the object value.
 
-__Impure (Typed)__: the data types are defined by the object type.
+__Impure (Explicit)__: the data types are defined by the object type.
 
-### Accepted types: ``Int, String, Bool, Array_Int, Array_String, Array_Bool``
+### Native types: _Int, String, Bool, Array_Int, Array_String, Array_Bool, Vector2, Array_Vector2, Vector3, Array_Vector3_
+
+# TODO:
+ - Add more native types: _Float, Array_Float, Vector2, Array_Vector2, Vector3, Array_Vector3_
