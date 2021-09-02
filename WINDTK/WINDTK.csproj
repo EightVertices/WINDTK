@@ -11,7 +11,7 @@
     <RootNamespace>WINDTK</RootNamespace>
     <Company>Roberto Soluções Profissionais</Company>
     <Authors>WIND, CoffeeDev</Authors>
-    <Version>0.6.8</Version>
+    <Version>0.7.0</Version>
     <Description>WINDTK</Description>
     <Copyright>Nenhum</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -19,8 +19,8 @@
     <PackageIcon>Icon.png</PackageIcon>
     <PackageIconUrl />
     <RepositoryUrl>https://github.com/Roberto-Solucoes-Profissionais-RSP/WINDTK</RepositoryUrl>
-    <RepositoryType>Repositório Legal (GitWérinson)</RepositoryType>
-    <PackageReleaseNotes>Legal</PackageReleaseNotes>
+    <RepositoryType>GIT</RepositoryType>
+    <PackageReleaseNotes>Stable version</PackageReleaseNotes>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
   <ItemGroup>
