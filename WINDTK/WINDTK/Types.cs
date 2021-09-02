@@ -14,7 +14,7 @@ namespace WINDTK
             this.data = data;
             this.type = type;
             this.identifier = identifier;
-            isArray = type == WXNTypes.Array_Bool || type == WXNTypes.Array_String || type == WXNTypes.Array_Int;
+            isArray = type.ToString().Split('_').Length > 1;
         }
     }
 
@@ -50,6 +50,32 @@ namespace WINDTK
             foreach (var item in objects) { returnValue += $"id: {item.identifier} / Type: {item.type} / Value: {item.data}\n"; }
 
             return returnValue;
+        }
+
+        public dynamic this[string ID, string type = "PureObjects"]
+        {
+            get
+            {
+                if (type == "Objects")
+                    return objects.Find(obj => obj.identifier == ID).data;
+                else
+                    return pureObjects.Find(obj => obj.identifier == ID).data;
+            }
+            set
+            {
+                if (type == "Objects")
+                    objects.ForEach(obj => 
+                    {
+                        if (obj.identifier == ID)
+                            obj.data = value;
+                    });
+                else
+                    pureObjects.ForEach(obj =>
+                    {
+                        if (obj.identifier == ID)
+                            obj.data = value;
+                    });
+            }
         }
     }
 }
