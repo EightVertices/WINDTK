@@ -14,7 +14,7 @@ namespace WINDTK.WXN
             this.data = data;
             this.type = type;
             this.identifier = identifier;
-            isArray = type.ToString().Split('_').Length > 1;
+            isArray = type.ToString().Contains("Array");
         }
     }
 
@@ -52,18 +52,18 @@ namespace WINDTK.WXN
             return returnValue;
         }
 
-        public dynamic this[string ID, string type = "PureObjects"]
+        public dynamic this[string ID, bool iteratePure = false]
         {
             get
             {
-                if (type == "Objects")
+                if (!iteratePure)
                     return objects.Find(obj => obj.identifier == ID).data;
                 else
                     return pureObjects.Find(obj => obj.identifier == ID).data;
             }
             set
             {
-                if (type == "Objects")
+                if (!iteratePure)
                     objects.ForEach(obj => 
                     {
                         if (obj.identifier == ID)

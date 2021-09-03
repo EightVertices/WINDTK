@@ -5,16 +5,6 @@ using System.Numerics;
 
 namespace WINDTK.WXN
 {
-    enum WXNSeparators
-    {
-        Vector = ';', Array = ',', ObjectValue = ':'
-    }
-
-    public enum WXNTypes
-    {
-        Int, Array_Int, String, Array_String, Bool, Array_Bool, Float, Array_Float, Vector, Array_Vector2, Array_Vector3
-    }
-
     public class WXNFile
     {
         private List<WXNPureObject> pureWriteMemory = new List<WXNPureObject>();
@@ -28,14 +18,8 @@ namespace WINDTK.WXN
 
         private dynamic GetPureObjectData(string text)
         {
-            if (text.Contains('(') && text.Contains(')'))
-            {
-                string[] rawVector = text.Replace("<", "").Replace(">", "").Replace('.', ',').Split((char)WXNSeparators.Vector);
-                if (rawVector.Length < 3)
-                    return new Vector2(float.Parse(rawVector[0]), float.Parse(rawVector[1]));
-                else
-                    return new Vector3(float.Parse(rawVector[0]), float.Parse(rawVector[1]), float.Parse(rawVector[2]));
-            }
+            if (text.Contains('<') && text.Contains('>'))
+                return DeconstructVector(text);
             else
             {
                 if (int.TryParse(text.Trim(), out int dataIntParsed)) 
@@ -101,11 +85,7 @@ namespace WINDTK.WXN
             // Reading file
             string[] FileAsText;
             try { FileAsText = File.ReadAllText(FilePath).Split(new[] { '\n', '\t', '\r' }, StringSplitOptions.RemoveEmptyEntries); }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-                throw new FileNotFoundException();
-            }
+            catch (Exception) { throw new FileNotFoundException(); }
 
             for (int i = 0; i < FileAsText.Length; i++)
             {
@@ -168,19 +148,23 @@ namespace WINDTK.WXN
 
                                 @object.data = rawFloatValue;
                                 break;
-                            case WXNTypes.Array_Vector2:
-                                Vector2[] rawVector2Value = new Vector2[RawValueArray.Length];
-                                for (int c = 0; c < RawValueArray.Length; c++)
-                                    rawVector2Value[c] = DeconstructVector(RawValueArray[c]);
+                            case WXNTypes.Array_Vector:
+                                if (RawValueArray[0].Split((char)WXNSeparators.Vector).Length > 2)
+                                {
+                                    Vector3[] rawVector3Value = new Vector3[RawValueArray.Length];
+                                    for (int c = 0; c < RawValueArray.Length; c++)
+                                        rawVector3Value[c] = DeconstructVector(RawValueArray[c]);
 
-                                @object.data = rawVector2Value;
-                                break;
-                            case WXNTypes.Array_Vector3:
-                                Vector3[] rawVector3Value = new Vector3[RawValueArray.Length];
-                                for (int c = 0; c < RawValueArray.Length; c++)
-                                    rawVector3Value[c] = DeconstructVector(RawValueArray[c]);
+                                    @object.data = rawVector3Value;
+                                } 
+                                else
+                                {
+                                    Vector2[] rawVector2Value = new Vector2[RawValueArray.Length];
+                                    for (int c = 0; c < RawValueArray.Length; c++)
+                                        rawVector2Value[c] = DeconstructVector(RawValueArray[c]);
 
-                                @object.data = rawVector3Value;
+                                    @object.data = rawVector2Value;
+                                }
                                 break;
                         }
                     }
@@ -293,8 +277,7 @@ namespace WINDTK.WXN
 
                             text += $"\"{item.data[item.data.Length - 1]}\"]\n";
                             break;
-                        case WXNTypes.Array_Vector2:
-                        case WXNTypes.Array_Vector3:
+                        case WXNTypes.Array_Vector:
                             for (int i = 0; i < item.data.Length - 1; i++)
                                 text += $"{item.data[i].ToString().Replace('.', ';').Replace(',', '.')}; ";
 
