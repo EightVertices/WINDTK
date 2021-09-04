@@ -39,28 +39,13 @@ namespace WINDTK.WXN
             return new WXNObject(Enum.Parse<WXNTypes>(FileInfoDivision[0].Split("<")[1].Replace(">", "")), FileInfoDivision[0].Split("<")[0], FileInfoDivision[1]);
         }
 
-        private bool CheckExistentID(List<WXNObject> WXNObjects, WXNObject _object)
+        private bool CheckExistentID<T>(List<T> objects, T _object) where T : WXNPureObject
         {
-            for (int i = 0; i < WXNObjects.Count; i++)
+            int index = objects.FindIndex(obj => obj.identifier == _object.identifier);
+            if (index > 0)
             {
-                if (_object.identifier == WXNObjects[i].identifier)
-                {
-                    WXNObjects[i] = _object;
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        private bool CheckExistentPureID(List<WXNPureObject> returnPureValue, WXNPureObject _object)
-        {
-            for (int i = 0; i < returnPureValue.Count; i++)
-            {
-                if (_object.identifier == returnPureValue[i].identifier)
-                {
-                    returnPureValue[i] = _object;
-                    return true;
-                }
+                objects[index].data = _object.data; 
+                return true;
             }
             return false;
         }
@@ -129,22 +114,22 @@ namespace WINDTK.WXN
                                 @object.data = rawIntValue;
                                 break;
                             case WXNTypes.Array_String:
-                                for (int b = 0; b < RawValueArray.Length; b++)
-                                    RawValueArray[b] = RawValueArray[b].Replace('"', ' ').Trim();
+                                for (int a = 0; a < RawValueArray.Length; a++)
+                                    RawValueArray[a] = RawValueArray[a].Replace('"', ' ').Trim();
 
                                 @object.data = RawValueArray;
                                 break;
                             case WXNTypes.Array_Bool:
                                 bool[] rawBooleanValue = new bool[RawValueArray.Length];
-                                for (int c = 0; c < RawValueArray.Length; c++)
-                                    rawBooleanValue[c] = bool.Parse(RawValueArray[c]);
+                                for (int a = 0; a < RawValueArray.Length; a++)
+                                    rawBooleanValue[a] = bool.Parse(RawValueArray[a]);
 
                                 @object.data = rawBooleanValue;
                                 break;
                             case WXNTypes.Array_Float:
                                 float[] rawFloatValue = new float[RawValueArray.Length];
-                                for (int c = 0; c < RawValueArray.Length; c++)
-                                    rawFloatValue[c] = float.Parse(RawValueArray[c].Replace('.', ','));
+                                for (int a = 0; a < RawValueArray.Length; a++)
+                                    rawFloatValue[a] = float.Parse(RawValueArray[a].Replace('.', ','));
 
                                 @object.data = rawFloatValue;
                                 break;
@@ -152,16 +137,16 @@ namespace WINDTK.WXN
                                 if (RawValueArray[0].Split((char)WXNSeparators.Vector).Length > 2)
                                 {
                                     Vector3[] rawVector3Value = new Vector3[RawValueArray.Length];
-                                    for (int c = 0; c < RawValueArray.Length; c++)
-                                        rawVector3Value[c] = DeconstructVector(RawValueArray[c]);
+                                    for (int a = 0; a < RawValueArray.Length; a++)
+                                        rawVector3Value[a] = DeconstructVector(RawValueArray[a]);
 
                                     @object.data = rawVector3Value;
                                 } 
                                 else
                                 {
                                     Vector2[] rawVector2Value = new Vector2[RawValueArray.Length];
-                                    for (int c = 0; c < RawValueArray.Length; c++)
-                                        rawVector2Value[c] = DeconstructVector(RawValueArray[c]);
+                                    for (int a = 0; a < RawValueArray.Length; a++)
+                                        rawVector2Value[a] = DeconstructVector(RawValueArray[a]);
 
                                     @object.data = rawVector2Value;
                                 }
@@ -188,12 +173,9 @@ namespace WINDTK.WXN
                         _object = new WXNPureObject(data[0], dataArray);
                     }
                     else
-                    {
-                        dynamic parsedData = GetPureObjectData(data[1]);
-                        _object = new WXNPureObject(data[0], parsedData);
-                    }
+                        _object = new WXNPureObject(data[0], GetPureObjectData(data[1]));
 
-                    if (!CheckExistentPureID(ReturnPureValue, _object))
+                    if (!CheckExistentID(ReturnPureValue, _object))
                         ReturnPureValue.Add(_object);
                 }
             }
@@ -221,7 +203,7 @@ namespace WINDTK.WXN
         {
             for (int i = 0; i < _object.Length; i++)
             {
-                if (CheckExistentPureID(pureWriteMemory, _object[i]))
+                if (CheckExistentID(pureWriteMemory, _object[i]))
                     return;
                 pureWriteMemory.Add(_object[i]);
             }

@@ -2,23 +2,7 @@
 
 namespace WINDTK.WXN
 {
-    public struct WXNObject
-    {
-        public string identifier;
-        public dynamic data;
-        public WXNTypes type;
-        public bool isArray;
-
-        public WXNObject(WXNTypes type, string identifier, dynamic data)
-        {
-            this.data = data;
-            this.type = type;
-            this.identifier = identifier;
-            isArray = type.ToString().Contains("Array");
-        }
-    }
-
-    public struct WXNPureObject
+    public class WXNPureObject
     {
         public string identifier;
         public dynamic data;
@@ -27,6 +11,20 @@ namespace WINDTK.WXN
         {
             this.identifier = identifier;
             this.data = data;
+        }
+    }
+
+    public class WXNObject : WXNPureObject
+    {
+        public WXNTypes type;
+        internal bool isArray;
+
+        public WXNObject(WXNTypes type, string identifier, object data) : base(identifier, data)
+        {
+            this.data = data;
+            this.type = type;
+            this.identifier = identifier;
+            isArray = type.ToString().Contains("Array");
         }
     }
 
