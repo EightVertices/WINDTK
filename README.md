@@ -30,3 +30,5 @@ __Impure (Explicit)__: the data types are defined by the object type.
 ### Native types: _Int, String, Bool, Array_Int, Array_String, Array_Bool, Vector, Array_Vector2, Array_Vector3_
 
 ## More details at the WXN docs: https://windtk-documentation.vercel.app/
+
+## Nuget Package: https://www.nuget.org/packages/WINDTK/0.7.5/
