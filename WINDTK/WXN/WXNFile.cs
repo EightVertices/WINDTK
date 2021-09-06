@@ -59,6 +59,11 @@ namespace WINDTK.WXN
                 return new Vector2(float.Parse(vectorValues[0]), float.Parse(vectorValues[1]));
         }
 
+        /// <summary>
+        /// Reads a WXN file and converts the data into a WXNFileContent, where you can cath the read data.
+        /// </summary>
+        /// <param name="FilePath">Path of the file to be read.</param>
+        /// <returns></returns>
         public WXNFileContent Read(string FilePath)
         {
             if (Path.GetExtension(FilePath) != ".wxn")
@@ -183,12 +188,19 @@ namespace WINDTK.WXN
             return new WXNFileContent(ReturnValue, ReturnPureValue);
         }
 
+        /// <summary>
+        /// Clears the pure memory and the normal memory.
+        /// </summary>
         public void ClearWriteMemory()
         {
             writeMemory.Clear();
             pureWriteMemory.Clear();
         }
 
+        /// <summary>
+        /// Adds to the normal memory the objects and checks if has equals identfiers.
+        /// </summary>
+        /// <param name="_object">Impure (Explicit) objects.</param>
         public void Write(params WXNObject[] _object)
         {
             for (int i = 0; i < _object.Length; i++)
@@ -199,6 +211,10 @@ namespace WINDTK.WXN
             }
         }
 
+        /// <summary>
+        /// Adds to the pure memory the objects and checks if has equals identfiers.
+        /// </summary>
+        /// <param name="_object">Pure (Implicit) objects.</param>
         public void WritePure(params WXNPureObject[] _object)
         {
             for (int i = 0; i < _object.Length; i++)
@@ -209,6 +225,10 @@ namespace WINDTK.WXN
             }
         }
 
+        /// <summary>
+        ///  Writes a WXN file using the pure memory and the normal memory.
+        /// </summary>
+        /// <param name="filePath">Path to write\over write the file.</param>
         public void Save(string filePath)
         {
             string text = "";
