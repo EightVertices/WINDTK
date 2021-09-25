@@ -11,7 +11,7 @@
     <RootNamespace>WINDTK</RootNamespace>
     <Company>Roberto Soluções Profissionais</Company>
     <Authors>WIND, CoffeeDev</Authors>
-    <Version>0.7.5</Version>
+    <Version>0.7.6</Version>
     <Description>WINDTK</Description>
     <Copyright>Nenhum</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -20,7 +20,7 @@
     <PackageIconUrl />
     <RepositoryUrl>https://github.com/Roberto-Solucoes-Profissionais-RSP/WINDTK</RepositoryUrl>
     <RepositoryType>GIT</RepositoryType>
-    <PackageReleaseNotes>Stable version with some types modified</PackageReleaseNotes>
+    <PackageReleaseNotes>Stable version with arrays optimized, and more speed at reading wxn files</PackageReleaseNotes>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
   <ItemGroup>
@@ -34,11 +34,5 @@
   <ItemGroup>
     <EmbeddedResource Include="Icon.ico" />
     <EmbeddedResource Include="Icon.bmp" />
-  </ItemGroup>
-  <ItemGroup>
-    <MonoGameContentReference Include="Assets\Content.mgcb" />
-  </ItemGroup>
-  <ItemGroup>
-    <TrimmerRootAssembly Include="Microsoft.Xna.Framework.Content.ContentTypeReader" Visible="false" />
   </ItemGroup>
 </Project>

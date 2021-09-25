@@ -36,7 +36,10 @@ namespace WINDTK.WXN
         private WXNObject DeconstructObject(string textInFile)
         {
             string[] FileInfoDivision = textInFile.Split((char)WXNSeparators.ObjectValue);
-            return new WXNObject(Enum.Parse<WXNTypes>(FileInfoDivision[0].Split("<")[1].Replace(">", "")), FileInfoDivision[0].Split("<")[0], FileInfoDivision[1]);
+            if (Enum.TryParse<WXNTypes>(FileInfoDivision[0].Split("<")[1].Replace(">", ""), out WXNTypes parsedType))
+                return new WXNObject(parsedType, FileInfoDivision[0].Split("<")[0], FileInfoDivision[1]);
+            else
+                throw new Exception($"Unknown type at {textInFile}");
         }
 
         private bool CheckExistentID<T>(List<T> objects, T _object) where T : WXNPureObject
@@ -112,11 +115,7 @@ namespace WINDTK.WXN
                         switch (@object.type)
                         {
                             case WXNTypes.Array_Int:
-                                int[] rawIntValue = new int[RawValueArray.Length];
-                                for (int a = 0; a < RawValueArray.Length; a++)
-                                    rawIntValue[a] = int.Parse(RawValueArray[a]);
-
-                                @object.data = rawIntValue;
+                                @object.data = Array.ConvertAll(RawValueArray, data => int.Parse(data));
                                 break;
                             case WXNTypes.Array_String:
                                 for (int a = 0; a < RawValueArray.Length; a++)
@@ -125,36 +124,16 @@ namespace WINDTK.WXN
                                 @object.data = RawValueArray;
                                 break;
                             case WXNTypes.Array_Bool:
-                                bool[] rawBooleanValue = new bool[RawValueArray.Length];
-                                for (int a = 0; a < RawValueArray.Length; a++)
-                                    rawBooleanValue[a] = bool.Parse(RawValueArray[a]);
-
-                                @object.data = rawBooleanValue;
+                                @object.data = Array.ConvertAll(RawValueArray, data => bool.Parse(data));
                                 break;
                             case WXNTypes.Array_Float:
-                                float[] rawFloatValue = new float[RawValueArray.Length];
-                                for (int a = 0; a < RawValueArray.Length; a++)
-                                    rawFloatValue[a] = float.Parse(RawValueArray[a].Replace('.', ','));
-
-                                @object.data = rawFloatValue;
+                                @object.data = Array.ConvertAll(RawValueArray, data => float.Parse(data.Replace('.', ',')));
                                 break;
                             case WXNTypes.Array_Vector:
                                 if (RawValueArray[0].Split((char)WXNSeparators.Vector).Length > 2)
-                                {
-                                    Vector3[] rawVector3Value = new Vector3[RawValueArray.Length];
-                                    for (int a = 0; a < RawValueArray.Length; a++)
-                                        rawVector3Value[a] = DeconstructVector(RawValueArray[a]);
-
-                                    @object.data = rawVector3Value;
-                                } 
+                                    @object.data = Array.ConvertAll<string, Vector3>(RawValueArray, data => DeconstructVector(data));
                                 else
-                                {
-                                    Vector2[] rawVector2Value = new Vector2[RawValueArray.Length];
-                                    for (int a = 0; a < RawValueArray.Length; a++)
-                                        rawVector2Value[a] = DeconstructVector(RawValueArray[a]);
-
-                                    @object.data = rawVector2Value;
-                                }
+                                    @object.data = Array.ConvertAll<string, Vector2>(RawValueArray, data => DeconstructVector(data));
                                 break;
                         }
                     }
@@ -170,12 +149,7 @@ namespace WINDTK.WXN
                     if (data[1].Trim()[0] == '[' && data[1].Trim()[^1] == ']')
                     {
                         string[] newData = data[1].Replace("[", "").Replace("]", "").Split((char)WXNSeparators.Array);
-                        var dataArray = new dynamic[newData.Length];
-
-                        for (int ii = 0; ii < newData.Length; ii++)
-                            dataArray[ii] = GetPureObjectData(newData[ii]);
-
-                        _object = new WXNPureObject(data[0], dataArray);
+                        _object = new WXNPureObject(data[0], Array.ConvertAll(newData, data => GetPureObjectData(data)));
                     }
                     else
                         _object = new WXNPureObject(data[0], GetPureObjectData(data[1]));
